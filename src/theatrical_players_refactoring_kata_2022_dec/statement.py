@@ -4,7 +4,6 @@ from typing import Any
 
 from theatrical_players_refactoring_kata_2022_dec.play_factory import PlayFactory
 from theatrical_players_refactoring_kata_2022_dec.plays.play import Play
-from theatrical_players_refactoring_kata_2022_dec.renderers.statement import StatementRenderer
 
 
 class Statement:
@@ -12,14 +11,18 @@ class Statement:
         self.plays = plays
         self.customer = customer
 
-    def generate(self, renderer: StatementRenderer) -> str:
-        return renderer.render(plays=self.plays, customer=self.customer)
-
     @classmethod
     def from_dicts(cls, invoice: dict[str, Any], plays: dict[str, dict[str, str]]) -> Statement:
         result: list[Play] = []
         for perf in invoice["performances"]:
             play_dict = plays[perf["playID"]]
             result.append(PlayFactory.create_play(play_dict=play_dict, perf=perf))
-        customer = invoice["customer"]
-        return cls(plays=result, customer=customer)
+        return cls(plays=result, customer=invoice["customer"])
+
+    @property
+    def total_amount(self) -> float:
+        return sum(play.price() for play in self.plays)
+
+    @property
+    def volume_credits(self) -> float:
+        return sum(play.volume_credits() for play in self.plays)
