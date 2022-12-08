@@ -14,16 +14,9 @@ def statement(invoice: dict[str, Any], plays: dict[str, dict[str, str]]) -> str:
     for perf in invoice["performances"]:
         play = plays[perf["playID"]]
         if play["type"] == "tragedy":
-            this_amount = 40000
-            if perf["audience"] > 30:
-                this_amount += 1000 * (perf["audience"] - 30)
+            this_amount = tragedy_play_price(perf=perf)
         elif play["type"] == "comedy":
-            this_amount = 30000
-            if perf["audience"] > 20:
-                this_amount += 10000 + 500 * (perf["audience"] - 20)
-
-            this_amount += 300 * perf["audience"]
-
+            this_amount = comedy_play_price(perf=perf)
         else:
             raise ValueError(f'unknown type: {play["type"]}')
 
@@ -39,3 +32,19 @@ def statement(invoice: dict[str, Any], plays: dict[str, dict[str, str]]) -> str:
     result += f"Amount owed is {format_as_dollars(total_amount/100)}\n"
     result += f"You earned {volume_credits} credits\n"
     return result
+
+
+def tragedy_play_price(perf: dict) -> float:
+    result = 40000
+    if perf["audience"] > 30:
+        result += 1000 * (perf["audience"] - 30)
+    return result
+
+
+def comedy_play_price(perf: dict) -> float:
+    this_amount = 30000
+    if perf["audience"] > 20:
+        this_amount += 10000 + 500 * (perf["audience"] - 20)
+
+    this_amount += 300 * perf["audience"]
+    return this_amount
