@@ -22,7 +22,6 @@ def statement(invoice: dict[str, Any], plays: dict[str, dict[str, str]]) -> str:
 
         # add volume credits
         volume_credits += max(perf["audience"] - 30, 0)
-        # add extra credit for every ten comedy attendees
         if "comedy" == play["type"]:
             volume_credits += math.floor(perf["audience"] / 5)
         # print line for this order
