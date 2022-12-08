@@ -6,7 +6,12 @@ from theatrical_players_refactoring_kata_2022_dec.plays.tragedy import TragedyPl
 
 
 class PlayFactory:
-    _play_types = {"comedy": ComedyPlay, "tragedy": TragedyPlay}
+    _play_types = {
+        "comedy": ComedyPlay,
+        "history": ComedyPlay,
+        "pastoral": ComedyPlay,
+        "tragedy": TragedyPlay,
+    }
 
     @classmethod
     def create_play(cls, play_dict: dict, perf: dict) -> Play:
